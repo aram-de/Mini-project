@@ -14,7 +14,7 @@ As of 2022-10-21:
 
 As of 2022-10-28
 -store data permanently
--create, update (including status), retrieve and delete orders
+-create, update (including status), retrieve and delete orders (as dictionaries)
 
 TECHNOLOGIES
 
