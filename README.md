@@ -24,5 +24,5 @@ Python (required by "client")
 TODO:
 
 2022-10-28
- - Refactor Data validation into a function
- -  
+ - ~~Refactor Data validation into a function~~
+ - 
