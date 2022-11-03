@@ -199,10 +199,10 @@ def order_menu():
 2 to add a new order
 3 to update order status
 4 to to change an order
-5 to delete a order"""
+5 to delete an order"""
     print(order_menu_string)
     u_input2 = int(input())
-    while u_input2 not in (0,1,2,3,4):
+    while u_input2 not in range(6):
         print("Not a valid option. Try again.") 
         print(order_menu_string)        
         u_input2 = input()
@@ -228,9 +228,6 @@ def order_menu():
         delete_item(orders, "orders")
         print("")
         order_menu(orders, "orders")
-
-
-
 
 def menu():
     main_menu_string = """Choose an option:
@@ -280,15 +277,15 @@ to update or x to go back to main menu: """)
         updatee_str = selected_list[int(updatee)].replace("'", "\"")
         #acceptable_updatee = updatee_str.replace("'", "\"")
         updatee_as_dict = json.loads(updatee_str)
-        print(type(updatee_as_dict))
         updatee_as_dict["status"] = new_status
         print(updatee_as_dict)
+        #TODO write the updatee_as_dict in the place of the original updatee
         with open(f"data\{name_of_selected_list}.txt", "r") as itemsf:
             lines = itemsf.readlines()
         if int(updatee) == len(lines)-1:
-            lines[int(updatee)] = f"{replacement}"
+            lines[int(updatee)] = str(updatee_as_dict)
         else:
-            lines[int(updatee)] = f"{replacement}\n"
+            lines[int(updatee)] = f"{str(updatee_as_dict)}\n"
         print(f"Status has been updated for {lines[int(updatee)]}")
         with open(f"data\{name_of_selected_list}.txt", "w") as itemsf:
             itemsf.writelines(lines)
