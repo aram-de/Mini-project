@@ -1,12 +1,14 @@
+import json
+
 def update_item(selected_list, name_of_selected_list):
     print("")
-#TODO add the order
-    if name_of_selected_list == "orders":
-        order = create_order(selected_list, name_of_selected_list)
-        with open(f"data\{name_of_selected_list}.txt", "a") as itemsf:
-            itemsf.write(f"\n{order}")
-            return(f"New order has been added to {name_of_selected_list[:-1]} list")
-# END OF THE TODO BIT
+# #TODO add the order
+#     if name_of_selected_list == "orders":
+#         order = create_order(selected_list, name_of_selected_list)
+#         with open(f"data\{name_of_selected_list}.txt", "a") as itemsf:
+#             itemsf.write(f"\n{order}")
+#             return(f"New order has been added to {name_of_selected_list[:-1]} list")
+# # END OF THE TODO BIT
     with open(f"data\{name_of_selected_list}.txt", "r") as itemsf:
         valid_input = []
         for num, line in enumerate(itemsf):            
@@ -41,7 +43,7 @@ to go back to go back to {name_of_selected_list[:-1]} menu: """).strip()
             with open(f"data\{name_of_selected_list}.txt", "w") as itemsf:
                 itemsf.writelines(lines)
             
-
+# def update_order
 def delete_item(selected_list, name_of_selected_list):
     print("")
     
@@ -75,7 +77,7 @@ to replace or x to go back to main menu""")
         print(f"{name_of_selected_list[:-1]} number {deletee} is now deleted.")
         menu()
 
-
+#TODO create variant for nicely formatted order output
 def show_items(selected_list, name_of_selected_list):
     print(f"\n{name_of_selected_list[:-1]} list")
     with open(f"data\{name_of_selected_list}.txt", "r") as itemf:
@@ -88,11 +90,10 @@ def create_order(selected_list, name_of_selected_list):
     order["customer_name"] = input("Enter the customer name: ")
     order["customer_address"] = input("Enter the customer address: ")
     order["customer_phone"] = input("Enter the customer phone: ")
-    order["status"] = input("Enter the order status: ")
+    order["status"] = "PREPARING"
     return order
     
     
-# TODO necesito una function que cree pedidos (create order) para reutilizarla en las otras funciones         
 def create_new_item(selected_list, name_of_selected_list):
     print(f"selected add {name_of_selected_list[:-1]}")
     if name_of_selected_list == "orders":
@@ -186,18 +187,6 @@ def product_menu():
         print("")
         product_menu(products, "products")
 
-# orders menu 
-# ELSE IF user input is 2:
-#  IF user input is 0:
-#  RETURN to main menu
-#  ELSE IF user input is 1:
-#  PRINT orders dictionary
-#  ELSE IF user input is 2:
-#  GET user input for customer name
-#  GET user input for customer address
-#  GET user input for customer phone number
-#  SET order status to be 'PREPARING'
-#  APPEND order to orders list
 
 def order_menu():
     orders = []
@@ -208,11 +197,12 @@ def order_menu():
 0 to go to main menu
 1 for seeing the list of orders
 2 to add a new order
-3 to update/replace a order
-4 to delete a order"""
+3 to update order status
+4 to to change an order
+5 to delete a order"""
     print(order_menu_string)
     u_input2 = int(input())
-    while u_input2 not in (1,2,3,4):
+    while u_input2 not in (0,1,2,3,4):
         print("Not a valid option. Try again.") 
         print(order_menu_string)        
         u_input2 = input()
@@ -227,10 +217,14 @@ def order_menu():
         print("")
         order_menu()
     elif u_input2 == 3:
-        update_item(orders, "orders")
+        update_order_status(orders, "orders")
         print("")
         order_menu()
     elif u_input2 == 4:
+        update_item(orders, "orders")
+        print("")
+        order_menu(orders, "orders")
+    elif u_input2 == 5:
         delete_item(orders, "orders")
         print("")
         order_menu(orders, "orders")
@@ -263,5 +257,42 @@ def menu():
     elif u_input == "3":
         print("")
         order_menu()
+
+def update_order_status(selected_list, name_of_selected_list):
+    with open(f"data\{name_of_selected_list}.txt", "r") as itemsf:
+        valid_input = []
+        for num, line in enumerate(itemsf):            
+            print(num, line.strip("\n"))
+            valid_input.append(str(num))
+        valid_input.append("x")
+    print("")
+    print(f"""Enter the number for the {name_of_selected_list[:-1]} you want
+to update or x to go to main menu: """)
+    updatee = input()
+    while updatee not in valid_input:
+        print(f"Not a valid option. Try again.\nChoose an option:")
+        updatee = input(f"""Enter the number for the {name_of_selected_list[:-1]} you want
+to update or x to go back to main menu: """)        
+    if str(updatee).lower() == "x":
+        menu()
+    else:
+        new_status = input(f"Enter the new status: ")
+        updatee_str = selected_list[int(updatee)].replace("'", "\"")
+        #acceptable_updatee = updatee_str.replace("'", "\"")
+        updatee_as_dict = json.loads(updatee_str)
+        print(type(updatee_as_dict))
+        updatee_as_dict["status"] = new_status
+        print(updatee_as_dict)
+        with open(f"data\{name_of_selected_list}.txt", "r") as itemsf:
+            lines = itemsf.readlines()
+        if int(updatee) == len(lines)-1:
+            lines[int(updatee)] = f"{replacement}"
+        else:
+            lines[int(updatee)] = f"{replacement}\n"
+        print(f"Status has been updated for {lines[int(updatee)]}")
+        with open(f"data\{name_of_selected_list}.txt", "w") as itemsf:
+            itemsf.writelines(lines)
+
+
 
 menu()
