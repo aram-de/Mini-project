@@ -1,5 +1,5 @@
 import json
-
+import ast
 def update_item(selected_list, name_of_selected_list):
     print("")
 # #TODO add the order
@@ -68,8 +68,17 @@ to replace or x to go back to main menu""")
 def show_items_and_gen_valid_inputs(selected_list, name_of_selected_list):
     with open(f"data\{name_of_selected_list}.txt", "r") as itemsf:
         valid_input = []
-        for num, line in enumerate(itemsf):            
-            print(num, line.strip("\n"))
+        for num, line in enumerate(itemsf):
+            if name_of_selected_list == "orders":
+                print(f"Order n.{num}")
+                line_as_dict = ast.literal_eval(line)
+                for key, value in line_as_dict.items():
+                    
+                    key = key.replace("_", " ").title()
+                    print(f"{key}: {value}")
+                print("")
+            else:           
+                print(num, line.strip("\n"))
             valid_input.append(str(num))
         valid_input.append("x")
     return valid_input
@@ -118,25 +127,25 @@ def courier_menu():
 4 to delete a courier"""
     print(courier_menu_string)
     u_input2 = int(input())
-    while u_input2 not in (1,2,3,4):
+    while u_input2 not in ("0","1","2","3","4"):
         print("Not a valid option. Try again.") 
         print(courier_menu_string)        
         u_input2 = input()
-    if u_input2 == 0:
+    if u_input2 == "0":
         menu()
-    elif u_input2 == 1:
+    elif u_input2 == "1":
         show_items_and_gen_valid_inputs(couriers, "couriers")
         print("")
         courier_menu()
-    elif u_input2 == 2:
+    elif u_input2 == "2":
         print(create_new_item(couriers, "couriers"))
         print("")
         courier_menu()
-    elif u_input2 == 3:
+    elif u_input2 == "3":
         update_item(couriers, "couriers")
         print("")
         courier_menu()
-    elif u_input2 == 4:
+    elif u_input2 == "4":
         delete_item(couriers, "couriers")
         print("")
         courier_menu(couriers, "couriers")
@@ -191,30 +200,30 @@ def order_menu():
 4 to to change an order
 5 to delete an order"""
     print(order_menu_string)
-    u_input2 = int(input())
-    while u_input2 not in range(6):
+    u_input2 = input()
+    while u_input2 not in ("0","1","2","3","4","5"):
         print("Not a valid option. Try again.") 
         print(order_menu_string)        
         u_input2 = input()
-    if u_input2 == 0:
+    if u_input2 == "0":
         menu()
-    elif u_input2 == 1:
+    elif u_input2 == "1":
         show_items_and_gen_valid_inputs(orders, "orders")
         print("")
         order_menu()
-    elif u_input2 == 2:
+    elif u_input2 == "2":
         print(create_new_item(orders, "orders"))
         print("")
         order_menu()
-    elif u_input2 == 3:
-        update_order_status(orders, "orders", True)
+    elif u_input2 == "3":
+        update_order(orders, "orders", True)
         print("")
         order_menu()
-    elif u_input2 == 4:
+    elif u_input2 == "4":
         update_order(orders, "orders")
         print("")
         order_menu()
-    elif u_input2 == 5:
+    elif u_input2 == "5":
         delete_item(orders, "orders")
         print("")
         order_menu(orders, "orders")
@@ -245,39 +254,6 @@ def menu():
         print("")
         order_menu()
 
-# def update_order_status(selected_list, name_of_selected_list, status):
-#     # with open(f"data\{name_of_selected_list}.txt", "r") as itemsf:
-#     #     valid_input = []
-#     #     for num, line in enumerate(itemsf):            
-#     #         print(num, line.strip("\n"))
-#     #         valid_input.append(str(num))
-#     #     valid_input.append("x")
-#     # print("")
-#     valid_input = show_items_and_gen_valid_inputs(selected_list, name_of_selected_list)
-#     print(f"""Enter the number for the {name_of_selected_list[:-1]} you want
-# to update or x to go to main menu: """)
-#     updatee = input()
-#     while updatee not in valid_input:
-#         print(f"Not a valid option. Try again.\nChoose an option:")
-#         updatee = input(f"""Enter the number for the {name_of_selected_list[:-1]} you want
-# to update or x to go back to main menu: """)        
-#     if str(updatee).lower() == "x":
-#         menu()
-#     else:
-#         new_status = input(f"Enter the new status: ")
-#         updatee_str = selected_list[int(updatee)].replace("'", "\"")
-#         updatee_as_dict = json.loads(updatee_str)
-#         updatee_as_dict["status"] = new_status
-#         #print(updatee_as_dict)
-#         with open(f"data\{name_of_selected_list}.txt", "r") as itemsf:
-#             lines = itemsf.readlines()
-#         if int(updatee) == len(lines)-1:
-#             lines[int(updatee)] = str(updatee_as_dict)
-#         else:
-#             lines[int(updatee)] = f"{str(updatee_as_dict)}\n"
-#         print(f"Status has been updated for {lines[int(updatee)]}")
-#         with open(f"data\{name_of_selected_list}.txt", "w") as itemsf:
-#             itemsf.writelines(lines)
 
 def update_order(selected_list, name_of_selected_list, status = False):
     valid_input = show_items_and_gen_valid_inputs(selected_list, name_of_selected_list)
