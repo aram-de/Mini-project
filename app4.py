@@ -42,6 +42,55 @@ class Menu():
         
 class Item():
     # def __init__(self) -> None: 
+    
+    def delete_item(self):
+        self.show_items()
+        valid_input = self.gen_valid_inputs()
+        if len(valid_input) == 1:
+            print("The are no items to delete") 
+            #self.item_menu() 
+        else:
+            print("Enter the number for the item you want to delete: ")
+            deletee = input()
+            deletee = self.check_valid_input(deletee,valid_input)
+            if deletee == "":
+                self.menu()
+            else:
+                with open(f"data\{self.type}.csv", "r") as itemsf:
+                    lines = itemsf.readlines()
+                    del lines[int(deletee)]
+                with open(f"data\{self.type}.csv", "w") as itemsf:
+                    for pos, line in enumerate(lines):
+                        
+                        #needed because otherwise deleting the last item would add a blank like
+                        # if pos == len(lines)-1:
+                        #     itemsf.write(line.strip())
+                        #else:
+                        
+                        itemsf.write(line)
+                print(f"{self.type} number {deletee} is now deleted.")
+                #self.item_menu()
+    
+    
+    def gen_valid_inputs(self) -> list:
+        list_of_dict = self.get_csv_and_return_as_list_of_dict()
+        valid_input = [str(num+1) for num, line in enumerate(list_of_dict)] 
+        #TODO there must be a way to do with without the unused line variable
+        valid_input.append("x")
+        return valid_input
+
+    
+    def check_valid_input(self, user_input : str, valid_inputs : list) -> str: 
+        while user_input not in valid_inputs and user_input.capitalize() != "X" :
+            print("Your choice was not valid or x to go back to the main menu.")
+            user_input = input(f"Please, choose a {self.type} by entering their corresponding number above: ")
+        if user_input.lower() == "x":
+            return ""
+        else:
+            return user_input
+
+
+
 
     def get_headers(self) -> list:
         #TODO each object order, courier or product has an attribute header
@@ -70,23 +119,14 @@ class Item():
         return list_of_dict
 
     def show_items(self) -> None:
-        list_of_dict = get_csv_and_return_as_list_of_dict(self.type)
+        list_of_dict = self.get_csv_and_return_as_list_of_dict()
         for num, line in enumerate(list_of_dict):      
-            print(f"{self.type[:-1].capitalize()} n.{num}")
+            print(f"{self.type[:-1].capitalize()} n.{num+1}")
             for key, value in line.items():
-                key = key.replace("_", " ").strip().title()
                 print(f"\t{key}: {value}")
             print("")
 
-    def gen_valid_inputs(self) -> list:
-        list_of_dict = get_csv_and_return_as_list_of_dict(self.type)
-        valid_input = [str(num) for num, line in enumerate(list_of_dict)] 
-        #TODO there must be a way to do with without the unused line variable
-        valid_input.append("x")
-        return valid_input
-
         
-        #TODO each object order, courier or product has an attribute header
         #TODO each object has a method to create a new one that collects the relevant values
     def asdict(self):
         pass
@@ -107,15 +147,6 @@ class Item():
                 writer.writeheader()
                 writer.writerow(an_item)
 
-
-    def check_valid_input(user_input : str, valid_inputs : list, item_type : str) -> str: 
-        while user_input not in valid_inputs and user_input.capitalize() != "X" :
-            print("Your choice was not valid or x to go back to the main menu.")
-            user_input = input(f"Please, choose a {item_type} by entering their corresponding number above: ")
-        if user_input.lower() == "x":
-            return ""
-        else:
-            return user_input
 
 
 
@@ -159,28 +190,7 @@ class Item():
     
 
 
-    def delete_item(selected_list, name_of_selected_list):
-        print("")
-        valid_input = show_items_and_gen_valid_inputs(selected_list, name_of_selected_list)
-        print("")
-        print("Enter the number for the item you want to delete: ")
-        deletee = input()
-        deletee = check_valid_input(deletee, valid_input, name_of_selected_list[:-1])
-        if deletee == "":
-            menu()
-        else:
-            with open(f"data\{name_of_selected_list}.txt", "r") as itemsf:
-                lines = itemsf.readlines()
-                del lines[int(deletee)]
-            with open(f"data\{name_of_selected_list}.txt", "w") as itemsf:
-                for pos, line in enumerate(lines):
-                    #needed because otherwise deleting the last item would add a blank like
-                    if pos == len(lines)-1:
-                        itemsf.write(line.strip())
-                    else:
-                        itemsf.write(line)
-            print(f"{name_of_selected_list[:-1]}number {deletee} is now deleted.")
-            menu()
+    
 
     
     def item_menu():
@@ -263,7 +273,15 @@ class Order(Item):
         return {'customer_name': self.customer_name, 'customer_address': self.customer_address,
             'customer_phone' : self.customer_phone, 'courier' : self.courier, 'status' : self.status,
             'items' : self.items}
-
+    
+    def show_items(self) -> None:
+        list_of_dict = self.get_csv_and_return_as_list_of_dict()
+        for num, line in enumerate(list_of_dict):      
+            print(f"{self.type[:-1].capitalize()} n.{num}")
+            for key, value in line.items():
+                key = key.replace("_", " ").strip().title()
+                print(f"\t{key}: {value}")
+            print("")
         # couriers = get_couriers()
         # valid_inputs = show_items_and_gen_valid_inputs(couriers, "couriers")
         # chosen_courier= input("Pleanse, choose a courier by entering their corresponding number above: ")
@@ -274,7 +292,7 @@ class Order(Item):
         #     return None
         # else:
         #     order["courier"] = couriers[int(chosen_courier)]
-        return order
+        
 
     
 
@@ -376,10 +394,13 @@ to update or x to go back to main menu: """)
 
 # anOrder = Order()
 # anOrder.add_item_to_file()
+# anOrder.show_items()
 
 
 aProduct = Product()
-aProduct.add_item_to_file()
+# aProduct.add_item_to_file()
+# aProduct.show_items()
+aProduct.delete_item()
 
 # aCourier = Courier()
 # aCourier.add_item_to_file()
