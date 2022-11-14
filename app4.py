@@ -48,7 +48,7 @@ class Item():
         valid_input = self.gen_valid_inputs()
         if len(valid_input) == 1:
             print("The are no items to delete") 
-            #self.item_menu() 
+            self.item_menu() 
         else:
             print("Enter the number for the item you want to delete: ")
             deletee = input()
@@ -61,17 +61,12 @@ class Item():
                     del lines[int(deletee)]
                 with open(f"data\{self.type}.csv", "w") as itemsf:
                     for pos, line in enumerate(lines):
-                        
-                        #needed because otherwise deleting the last item would add a blank like
-                        # if pos == len(lines)-1:
-                        #     itemsf.write(line.strip())
-                        #else:
-                        
                         itemsf.write(line)
                 print(f"{self.type} number {deletee} is now deleted.")
-                #self.item_menu()
+                self.item_menu()
     
-    
+
+
     def gen_valid_inputs(self) -> list:
         list_of_dict = self.get_csv_and_return_as_list_of_dict()
         valid_input = [str(num+1) for num, line in enumerate(list_of_dict)] 
@@ -80,6 +75,7 @@ class Item():
         return valid_input
 
     
+
     def check_valid_input(self, user_input : str, valid_inputs : list) -> str: 
         while user_input not in valid_inputs and user_input.capitalize() != "X" :
             print("Your choice was not valid or x to go back to the main menu.")
@@ -91,9 +87,7 @@ class Item():
 
 
 
-
     def get_headers(self) -> list:
-        #TODO each object order, courier or product has an attribute header
         file_exists = os.path.isfile(f"data\{self.type}.csv")
         if not file_exists and self.type == "orders":
             field_names = ['customer_name', 'customer_address', 'customer_phone', 'courier', 'status', 'items']
@@ -110,6 +104,7 @@ class Item():
         return field_names
     
 
+
     def get_csv_and_return_as_list_of_dict(self) -> list:
         list_of_dict = []
         with open(f"data\{self.type}.csv", "r") as csv_file:
@@ -117,6 +112,8 @@ class Item():
             for row in records:
                 list_of_dict.append(row)
         return list_of_dict
+
+
 
     def show_items(self) -> None:
         list_of_dict = self.get_csv_and_return_as_list_of_dict()
@@ -130,6 +127,8 @@ class Item():
         #TODO each object has a method to create a new one that collects the relevant values
     def asdict(self):
         pass
+
+
 
     def add_item_to_file(self): 
 #TODO this function does not add a line the previous line does not have a break line character
@@ -149,12 +148,10 @@ class Item():
 
 
 
-
-
-    def check_existing_input(user_input : str, selected_list : list, item_type : str) -> str: 
+    def check_existing_input(self, user_input : str, selected_list : list) -> str: 
         while user_input in selected_list and user_input.capitalize() != "X" :
-            print(f"That {item_type} already exists.")
-            user_input = input(f"Please, enter a new {item_type} or x to return to the main menu: ")
+            print(f"That {self.type} already exists.")
+            user_input = input(f"Please, enter a new {self.type} or x to return to the main menu: ")
         if user_input.lower() == "x":
             return ""
         else:
@@ -162,72 +159,116 @@ class Item():
 
 
 
-    def update_item(self):
-        print("")
-        valid_inputs = show_items_and_gen_valid_inputs(selected_list, name_of_selected_list)
-        print(f"Enter the number for the {name_of_selected_list[:-1]}you want to replace: ")
-        replacee = input()
-        replacee = check_valid_input(replacee, valid_inputs, name_of_selected_list[:-1])        
-        if replacee == "":
-            menu()
+    def update_item(self, status = False):
+        selected_list = self.get_csv_and_return_as_list_of_dict()
+        valid_inputs = self.gen_valid_inputs()
+        self.show_items()
+        print(f"""Enter the number for the {self.type} you want
+    to update or x to go to main menu: """)
+        updatee = input()
+        self.check_valid_input(updatee, valid_inputs)
+        updatee_as_dict = selected_list[int(updatee)].replace("'", "\"")
+        if status: #If we are updating the status, comes passed from the order menu as optional param
+            new_status = input(f"Enter the new status: ")
+            if new_status.strip() != "":
+                updatee_as_dict["status"] = new_status
         else:
-            replacement = input(f"Enter the {name_of_selected_list[:-1]}you want to replace your choice with: ")#
-            replacement = check_existing_input(replacement, selected_list, name_of_selected_list)
+            name = input("Enter the customer name: ")
+            if name.strip() != "":
+                updatee_as_dict["customer_name"] = name
+            address = input("Enter the customer address: ")
+            if address.strip() != "":
+                updatee_as_dict["customer_address"] = address
+            phone = input("Enter the customer phone: ")
+            if phone.strip() != "":
+                updatee_as_dict["customer_phone"] = phone
+            
+            # couriers = get_couriers()
+            # valid_inputs = show_items_and_gen_valid_inputs(couriers, "courier")
+            # chosen_courier= input("Pleanse, choose a courier by entering their corresponding number above: ")
+            # chosen_courier = check_valid_input(chosen_courier, valid_inputs, "courier")
+            # if chosen_courier == "":
+            #     order_menu()
+            # else:
+            #     updatee_as_dict["courier"] = couriers[int(chosen_courier)]
+        
+        
+        with open(f"data\{name_of_selected_list}.csv", "r") as itemsf:
+                lines = itemsf.readlines()
+        if int(updatee) == len(lines)-1:
+            lines[int(updatee)] = str(updatee_as_dict)
+        else:
+            lines[int(updatee)] = f"{str(updatee_as_dict)}\n"
+        with open(f"data\{name_of_selected_list}.txt", "w") as itemsf:
+                itemsf.writelines(lines)
+        print(f"Order {lines[int(updatee)]} has been updated")
+        
 
-            if replacement == "":
-                menu()
-            else:
-                old_item = selected_list[int(replacee)]
-                with open(f"data\{name_of_selected_list}.txt", "r") as itemsf:
-                    lines = itemsf.readlines()
-                if int(replacee) == len(lines)-1:
-                    lines[int(replacee)] = f"{replacement}"
-                else:
-                    lines[int(replacee)] = f"{replacement}\n"
-                print(f"{old_item} has replaced {lines[int(replacee)]}")
-                with open(f"data\{name_of_selected_list}.txt", "w") as itemsf:
-                    itemsf.writelines(lines)
+
+
+    # def update_item(self):
+    #     print("")
+    #     valid_inputs = self.gen_valid_inputs()
+    #     print(f"Enter the number for the {self.type} you want to replace: ")
+    #     replacee = input()
+    #     replacee = self.check_valid_input(replacee, valid_inputs)        
+    #     if replacee == "":
+    #         self.item_menu()
+    #     else:
+    #         replacement = input(f"Enter the {self.type} you want to replace your choice with: ")#
+    #         replacement = self.check_existing_input(replacement, selected_list, name_of_selected_list)
+
+    #         if replacement == "":
+    #             self.item_menu()
+    #         else:
+    #             old_item = selected_list[int(replacee)]
+    #             with open(f"data\{name_of_selected_list}.txt", "r") as itemsf:
+    #                 lines = itemsf.readlines()
+    #             if int(replacee) == len(lines)-1:
+    #                 lines[int(replacee)] = f"{replacement}"
+    #             else:
+    #                 lines[int(replacee)] = f"{replacement}\n"
+    #             print(f"{old_item} has replaced {lines[int(replacee)]}")
+    #             with open(f"data\{name_of_selected_list}.txt", "w") as itemsf:
+    #                 itemsf.writelines(lines)
     
 
-
     
-
-    
-    def item_menu():
-        couriers = []
-        with open("data\couriers.txt", "r+") as courierf:
-            for line in courierf:
-                couriers.append(line.strip("\n"))
-        courier_menu_string = """Choose an option:
+    def item_menu(self):
+        # couriers = []
+        # with open(f"data\{self.type}.csv", "r+") as csvFile:
+        #     for line in csvFile:
+        #         couriers.append(line.strip("\n"))
+        menu_string = f"""Choose an option:
     0 to go to main menu
-    1 for seeing the list of couriers
-    2 to add a new courier
-    3 to update/replace a courier
-    4 to delete a courier"""
-        print(courier_menu_string)
+    1 for seeing the list of {self.type}
+    2 to add a new {self.type}
+    3 to update/replace a {self.type}
+    4 to delete a {self.type}"""
+        print(menu_string)
         u_input2 = input()
         while u_input2 not in ("0","1","2","3","4"):
             print("Not a valid option. Try again.") 
-            print(courier_menu_string)        
+            print(menu_string)        
             u_input2 = input()
         if u_input2 == "0":
-            menu()
+            self.item_menu()
         elif u_input2 == "1":
-            show_items_and_gen_valid_inputs(couriers, "couriers")
+            self.show_items()
             print("")
-            courier_menu()
+            self.item_menu()
         elif u_input2 == "2":
-            print(create_new_item(couriers, "couriers"))
+            self.add_item_to_file()
             print("")
-            courier_menu()
+            self.item_menu()
         elif u_input2 == "3":
-            update_item(couriers, "couriers")
+            self.update_item()
             print("")
-            courier_menu()
+            self.item_menu()
         elif u_input2 == "4":
-            delete_item(couriers, "couriers")
+            self.delete_item()
             print("")
-            courier_menu()
+            self.item_menu()
 
 class Courier(Item):
     def __init__(self) -> None:
@@ -274,14 +315,9 @@ class Order(Item):
             'customer_phone' : self.customer_phone, 'courier' : self.courier, 'status' : self.status,
             'items' : self.items}
     
-    def show_items(self) -> None:
-        list_of_dict = self.get_csv_and_return_as_list_of_dict()
-        for num, line in enumerate(list_of_dict):      
-            print(f"{self.type[:-1].capitalize()} n.{num}")
-            for key, value in line.items():
-                key = key.replace("_", " ").strip().title()
-                print(f"\t{key}: {value}")
-            print("")
+
+
+
         # couriers = get_couriers()
         # valid_inputs = show_items_and_gen_valid_inputs(couriers, "couriers")
         # chosen_courier= input("Pleanse, choose a courier by entering their corresponding number above: ")
@@ -340,67 +376,140 @@ class Order(Item):
             print("")
             order_menu(orders, "orders")
 
-    def update_item(self, selected_list, name_of_selected_list, status = False):
-        valid_input = show_items_and_gen_valid_inputs(selected_list, name_of_selected_list)
-        print(f"""Enter the number for the {name_of_selected_list[:-1]}you want
-to update or x to go to main menu: """)
-        updatee = input()
-        while updatee not in valid_input:
-            print(f"Not a valid option. Try again.\nChoose an option:")
-            updatee = input(f"""Enter the number for the {name_of_selected_list[:-1]}you want
-to update or x to go back to main menu: """)        
-        if str(updatee).lower() == "x":
-            menu()
-        else:
-            updatee_str = selected_list[int(updatee)].replace("'", "\"")
-            updatee_as_dict = json.loads(updatee_str)
-        
-        
-        if status: #If we are updating the status, comes passed from the order menu as optional param
-            new_status = input(f"Enter the new status: ")
-            if new_status.strip() != "":
-                updatee_as_dict["status"] = new_status
-        
-        else:
-            name = input("Enter the customer name: ")
-            if name.strip() != "":
-                updatee_as_dict["customer_name"] = name
-            address = input("Enter the customer address: ")
-            if address.strip() != "":
-                updatee_as_dict["customer_address"] = address
-            phone = input("Enter the customer phone: ")
-            if phone.strip() != "":
-                updatee_as_dict["customer_phone"] = phone
-            
-            couriers = get_couriers()
-            valid_inputs = show_items_and_gen_valid_inputs(couriers, "courier")
-            chosen_courier= input("Pleanse, choose a courier by entering their corresponding number above: ")
-            chosen_courier = check_valid_input(chosen_courier, valid_inputs, "courier")
-            if chosen_courier == "":
-                order_menu()
+
+#TODO make it so that it iterates through the headers and asks for the new value for each header
+    def update_item(self, status = False):
+            selected_list = self.get_csv_and_return_as_list_of_dict()
+            valid_inputs = self.gen_valid_inputs()
+            self.show_items()
+            print(f"""Enter the number for the {self.type} you want
+        to update or x to go to main menu: """)
+            updatee = input()
+            self.check_valid_input(updatee, valid_inputs)
+            updatee = int(updatee)
+            updatee_as_dict = selected_list[updatee-1]
+            if status: #If we are updating the status, comes passed from the order menu as optional param
+                new_status = input(f"Enter the new status: ")
+                if new_status.strip() != "":
+                    updatee_as_dict["status"] = new_status
             else:
-                updatee_as_dict["courier"] = couriers[int(chosen_courier)]
+                for key, value in updatee_as_dict.items():
+                    print(key, value)
+                    key.replace("_", " ")
+                    newValue = input(f"Enter the {key} ")
+                    updatee_as_dict[key] = newValue
+                
+                
+                
+                
+                
+                
+                
+                
+            #     #name = input("Enter the customer name: ")
+            #     name = "DODODOO"
+            #     if name.strip() != "":
+            #         updatee_as_dict["customer_name"] = name
+            #     #address = input("Enter the customer address: ")
+            #     address = "ADDRESSSS"
+            #     if address.strip() != "":
+            #         updatee_as_dict["customer_address"] = address
+            #     phone = "££%$£$%^%"
+            #     #phone = input("Enter the customer phone: ")
+            #     if phone.strip() != "":
+            #         updatee_as_dict["customer_phone"] = phone
+ 
+            #     aCourier = Courier()
+            #     aCourier.show_items()
+            #     valid_inputs = aCourier.gen_valid_inputs()
+            #     chosen_courier = input("Enter the number for your courier of choice: ")
+            #     valid_inputs = aCourier.check_valid_input(chosen_courier,valid_inputs)
+            #     if chosen_courier == "":
+            #         aCourier.item_menu()
+            #     else:
+            #         updatee_as_dict["courier"] = int(chosen_courier)
+
+
+            # with open(f"data\{self.type}.csv", "r") as csv_file:
+            #     records = csv.DictReader(csv_file, skipinitialspace=True)
+            #     list_of_records = (list(records))
+            # list_of_records[int(updatee)-1] = updatee_as_dict
+
+            # with open(f"data\{self.type}.csv", "w", newline='') as csvfile:
+            #     writer = csv.DictWriter(csvfile, fieldnames= self.field_names)
+            #     writer.writeheader()
+            #     for dictio in list_of_records:
+            #         writer.writerow(dictio)
+            # print(f"Order {updatee} has been updated")
+
+                
+
+              
+                
+        
+
+
+#   def update_item(self, status = False):
+#         valid_input = show_items_and_gen_valid_inputs(selected_list, name_of_selected_list)
+#         print(f"""Enter the number for the {name_of_selected_list[:-1]}you want
+# to update or x to go to main menu: """)
+#         updatee = input()
+#         while updatee not in valid_input:
+#             print(f"Not a valid option. Try again.\nChoose an option:")
+#             updatee = input(f"""Enter the number for the {name_of_selected_list[:-1]}you want
+# to update or x to go back to main menu: """)        
+#         if str(updatee).lower() == "x":
+#             menu()
+#         else:
+#             updatee_str = selected_list[int(updatee)].replace("'", "\"")
+#             updatee_as_dict = json.loads(updatee_str)
         
         
-        with open(f"data\{name_of_selected_list}.txt", "r") as itemsf:
-                lines = itemsf.readlines()
-        if int(updatee) == len(lines)-1:
-            lines[int(updatee)] = str(updatee_as_dict)
-        else:
-            lines[int(updatee)] = f"{str(updatee_as_dict)}\n"
-        with open(f"data\{name_of_selected_list}.txt", "w") as itemsf:
-                itemsf.writelines(lines)
-        print(f"Order {lines[int(updatee)]} has been updated")
+#         if status: #If we are updating the status, comes passed from the order menu as optional param
+#             new_status = input(f"Enter the new status: ")
+#             if new_status.strip() != "":
+#                 updatee_as_dict["status"] = new_status
+        
+#         else:
+#             name = input("Enter the customer name: ")
+#             if name.strip() != "":
+#                 updatee_as_dict["customer_name"] = name
+#             address = input("Enter the customer address: ")
+#             if address.strip() != "":
+#                 updatee_as_dict["customer_address"] = address
+#             phone = input("Enter the customer phone: ")
+#             if phone.strip() != "":
+#                 updatee_as_dict["customer_phone"] = phone
+            
+#             couriers = get_couriers()
+#             valid_inputs = show_items_and_gen_valid_inputs(couriers, "courier")
+#             chosen_courier= input("Pleanse, choose a courier by entering their corresponding number above: ")
+#             chosen_courier = check_valid_input(chosen_courier, valid_inputs, "courier")
+#             if chosen_courier == "":
+#                 order_menu()
+#             else:
+#                 updatee_as_dict["courier"] = couriers[int(chosen_courier)]
+        
+        
+#         with open(f"data\{name_of_selected_list}.txt", "r") as itemsf:
+#                 lines = itemsf.readlines()
+#         if int(updatee) == len(lines)-1:
+#             lines[int(updatee)] = str(updatee_as_dict)
+#         else:
+#             lines[int(updatee)] = f"{str(updatee_as_dict)}\n"
+#         with open(f"data\{name_of_selected_list}.txt", "w") as itemsf:
+#                 itemsf.writelines(lines)
+#         print(f"Order {lines[int(updatee)]} has been updated")
 
-# anOrder = Order()
-# anOrder.add_item_to_file()
-# anOrder.show_items()
+anOrder = Order()
+#anOrder.add_item_to_file()
+#anOrder.show_items()
+anOrder.update_item()
 
-
-aProduct = Product()
+# aProduct = Product()
 # aProduct.add_item_to_file()
-# aProduct.show_items()
-aProduct.delete_item()
+# # aProduct.show_items()
+# aProduct.delete_item()
 
 # aCourier = Courier()
 # aCourier.add_item_to_file()
