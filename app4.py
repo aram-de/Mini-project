@@ -398,5 +398,5 @@ class Menu():
             an_order.item_menu()
 
 
-aMenu = Menu()
-aMenu.menu()
+# aMenu = Menu()
+# aMenu.menu()
