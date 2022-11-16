@@ -53,11 +53,12 @@ On this week I decided that showing an index zero in my menus for the lists of o
 
 This had huge consequences throughout my code for two reasons:
 
-1. I had to adjust whenever I took an input to select by index by subtracting one so that the displayed choice would match the actual index choice.
+ - I had to adjust whenever I took an input to select by index by subtracting one so that the displayed choice would match the actual index choice.
 Eg: 
 Menu displays: 
-	1 Melon
-	2 Coke
+	 - 1. Melon
+   
+	 - 2. Coke
 
 	Actual list index positions are 0 for Melon and 1 for Coke, so if the client enters 1 because they chose Melon, I need to pass zero to functions.
 	
@@ -110,4 +111,3 @@ Python (required by "client")
 ## Most enjoyed
 
 Moving to an OOP implementation. Even though the architecture is poor and shows my lack of knowledge of architectural patterns, there was a certain satisfaction in doing OOP after 7 years without touching it.
-
