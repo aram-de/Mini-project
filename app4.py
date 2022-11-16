@@ -33,7 +33,7 @@ class Product(Item):
 class Order(Item):
 #TODO add method to add products to an order when creating a new order
     def __init__(self) -> None:
-
+        
         self.type = "orders"
         self.customer_name = ""
         self.customer_address = ""
