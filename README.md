@@ -20,8 +20,10 @@ TECHNOLOGIES
 
 Python (required by "client")
 
-
-TODO:
-
 2022-11-08
- - Refactor Data validation into a function
+ - Refactor Data validation into a function (this was a terrible mistake and I should have used try and catch)
+
+2022-11-13
+ - Did the OOP implementation. The architecture is terrible but don't have time to nuke and fix.
+
+
