@@ -106,6 +106,8 @@ Refactor to use integers for all menu options to avoid so many (possibly all) ba
 
 Refactor to use try, excepts to validate my data.
 
+The CSV module by default reads and writes all data (both keys and values of the dictionarys) as strings. I would have liked to find out how to explicitly store in my data type of choice.
+
 
 ## TECHNOLOGIES
 
