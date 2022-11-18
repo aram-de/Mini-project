@@ -83,7 +83,11 @@ The move to CSV again caused problems with the line numbers, which is linked to 
 
 ## Week 5
 As of 2022-10-16
-Without new requirement yet, I have moved to do testing using pytest. I have broken down my main file into a file for the Item class, which is too long and created  a file to test the courier class.
+Without new requirement yet, I have moved to do testing using pytest. ~~I have broken down my main file into a file for the Item class, which is too long~~ and created a file to test the courier class.
+
+As of 2022-10-17
+Breaking the file into parts resulted in circular import hell, so everything is back to a huge ugly file. 
+
 
 ## Approach to meet requirements
 
