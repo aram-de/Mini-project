@@ -7,7 +7,6 @@ pos_status = ("Preparing", "Waiting", "Travelling", "Delivered")
 
 
 class Item():
-    # def __init__(self) -> None: 
     def __init__(self) -> None:
         self.content = "Item content"
         self.type = "item"
@@ -77,25 +76,6 @@ class Item():
             return (int(user_input) - 1) #-1 so that it matches the index instead of the number in shown list
     
 
-    # def get_headers(self) -> list:
-    #     file_exists = os.path.isfile(rf"data\{self.type}.csv")
-    #     if not file_exists and self.type == "orders":
-    #         field_names = ['customer_name', 'customer_address', 'customer_phone', 'courier', 'status', 'items']
-    #     elif not file_exists and self.type == "couriers":
-    #         field_names = ['name', 'phone']
-    #     elif not file_exists and self.type == "products":
-    #         field_names = ['name', 'price']
-    #     else:
-    #         file_to_open = Path(rf"data/{self.type}.csv")
-    #         with open(file_to_open, "r") as csv_file:
-    #         #with open(rf"data\{self.type}.csv", "r") as csv_file:
-    #             records = csv.DictReader(csv_file, skipinitialspace=True)
-    #             field_names = records.fieldnames
-    #             print(len(list(records)))
-    #             print(field_names)
-    #     return field_names
-    
-
 
     def get_csv_and_return_as_list_of_dict(self) -> list:
         try:
@@ -128,7 +108,6 @@ class Item():
         return {'name': self.name, 'age': self.age}
 
 
-#TODO: validate input for numeric data types, will probably need class specific implementation
     def collect_attributes(self) -> dict:
         updatee_as_dict = self.as_dict()
         for key, value in updatee_as_dict.items():
@@ -154,17 +133,6 @@ class Item():
                 writer = csv.DictWriter(csvfile, fieldnames= self.field_names)
                 writer.writeheader()
                 writer.writerow(an_item)
-
-
-
-    # def check_if_input_already_exists(self, user_input : str, selected_list : list) -> str: 
-    #     while user_input in selected_list and user_input.capitalize() != "X" :
-    #         print(f"That {self.type} already exists.")
-    #         user_input = input(f"Please, enter a new {self.type} or x to return to the main menu: ")
-    #     if user_input.lower() == "x":
-    #         return ""
-    #     else:
-    #         return user_input
 
 
     def update_item(self):
@@ -372,20 +340,6 @@ class Order(Item):
                 updatee_as_dict[key] = newValue
         return  updatee_as_dict
 
-#     def add_item_to_file(self): 
-# #TODO this function does not add a line the previous line does not have a break line character
-#         file_exists = os.path.isfile(rf"data\{self.type}.csv")
-#         an_item = self.collect_attributes()
-#         file_to_open = Path(rf"data/{self.type}.csv")
-#         if file_exists and os.stat(rf"data\{self.type}.csv").st_size != 0: #file exists and it is not empty
-#             with open(file_to_open, "a", newline='') as csv_file:
-#                 writer = csv.DictWriter(csv_file, fieldnames= self.field_names)
-#                 writer.writerow(an_item)
-#         else: #file either does not exist or is emtpy
-#             with open(file_to_open, "w", newline='') as csv_file:
-#                 writer = csv.DictWriter(csv_file, fieldnames= self.field_names)
-#                 writer.writeheader()
-#                 writer.writerow(an_item)
 
     def choose_courier_for_order(self) -> int:
         an_item = Courier()
@@ -436,6 +390,8 @@ def menu():
             counter+=1
             print("")
         if user_input == "0" or counter == 5:
+            if counter == 5:
+                print("Too many invalid inputs")
             sys.exit(0)
         elif user_input == "1":
             print("")
@@ -458,5 +414,5 @@ def menu():
 
 
 
-# menu()
+menu()
 
