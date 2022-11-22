@@ -1,3 +1,4 @@
+
 # Mini-project
 
 ## Generation's Data Engineering Bootcamp Mini Project
@@ -83,16 +84,25 @@ The move to CSV again caused problems with the line numbers, which is linked to 
 
 ## Week 5
 As of 2022-11-16
+
 Without new requirement yet, I have moved to do testing using pytest. ~~I have broken down my main file into a file for the Item class, which is too long~~ and created a file to test the courier class.
+
 As of 2022-11-17
+
 Breaking the file into parts resulted in circular import hell, so everything is back to a huge ugly file. 
+
 As of 2022-11-22
-We received the requirements for week 5. It they were to 
+
+We received the requirements for week 5. It they were to
+
 -**add an index to each item**. Although this seems relatively easy to implement, this week and week six were optional and I decided to focus on trying to implement my program using a repository pattern.
+
 -**read and write the data to and from a database for products and couriers.** This seemed more challenging and interesting, but being optional I also left it aside. 
 
 ## Week 6
+
 As of 2022-11-22
+
 The new requirement was to **use a database to store the persistent data for orders too**. Once more, this requirement was optional and I decided to leave it aside to focus on implementing the repository pattern. 
 
 Unfortunately, I was not able to implement the repository pattern successfully. 
@@ -107,15 +117,16 @@ This proved to be a poor strategy since there were some "requirements" that were
 
 If you check the graphic above you can see that I have methods to perform all the functions required by the "client" 
 
--show_items: displays the items be it orders, products or couriers.
--add_item_to_file: adds a new item and stores it persistently.
--delete_items: deletes an item and stores that deletion persistently.
--update_item: allows you to update an item and stores it persistently.
+1. show_items: displays the items be it orders, products or couriers.
+2. add_item_to_file: adds a new item and stores it persistently.
+3. delete_items: deletes an item and stores that deletion persistently.
+4. update_item: allows you to update an item and stores it persistently.
 
 Specifically for the order class it was required that you can update the status of an order, add or update the courier and add items for the order all of them by choosing an index from a list. These features are supported by the following methods
--select_valid_status
--choose_courier_for_order
--choose_items_for_order
+
+  1. select_valid_status
+   2. choose_courier_for_order
+   3. choose_items_for_order
 
 There are obviously other methods in place which help the methods that perform the functions required by the "client".
 
@@ -138,10 +149,8 @@ It would be nice to complete the requirements from weeks five and six and the op
 
 ## TECHNOLOGIES
 
-Python (required by "client")
-
-Database (mysql running on a docker) - Optional and not currently implemented.
-
+ 1. Python (required by "client")  Database (mysql running on a docker)
+  2. Optional and not currently implemented.
 
 ## Most enjoyed
 
