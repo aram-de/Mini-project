@@ -2,7 +2,7 @@
 
 ## Generation's Data Engineering Bootcamp Mini Project
 
-This project is intended to be a CLI management system for ordering from a pop-up cafe place. 
+This project is intended to be a CLI management system for ordering from a pop-up cafe place. The requirements changed weekly in order to both represent changing requirements from a client and also support our learning journey by adding complexity as we progressed.
 
 # Requirements
 
@@ -82,12 +82,20 @@ In hindsight, I should have created a class list of Items and then list of produ
 The move to CSV again caused problems with the line numbers, which is linked to the index values so hell broke loose again with my input validation which at this point is two functions, one that produces the valid inputs and one that checks that the input is valid.
 
 ## Week 5
-As of 2022-10-16
+As of 2022-11-16
 Without new requirement yet, I have moved to do testing using pytest. ~~I have broken down my main file into a file for the Item class, which is too long~~ and created a file to test the courier class.
-
-As of 2022-10-17
+As of 2022-11-17
 Breaking the file into parts resulted in circular import hell, so everything is back to a huge ugly file. 
+As of 2022-11-22
+We received the requirements for week 5. It they were to 
+-**add an index to each item**. Although this seems relatively easy to implement, this week and week six were optional and I decided to focus on trying to implement my program using a repository pattern.
+-**read and write the data to and from a database for products and couriers.** This seemed more challenging and interesting, but being optional I also left it aside. 
 
+## Week 6
+As of 2022-11-22
+The new requirement was to **use a database to store the persistent data for orders too**. Once more, this requirement was optional and I decided to leave it aside to focus on implementing the repository pattern. 
+
+Unfortunately, I was not able to implement the repository pattern successfully. 
 
 ## Approach to meet requirements
 
@@ -95,25 +103,45 @@ I read the requirements section that were weekly delivered to us and tried to ha
 
 This proved to be a poor strategy since there were some "requirements" that were implicit in the pseudocode and I had to reimplement some functions based on the pseudocode.
 
+![UML diagram showing the classes I used](https://i.ibb.co/GT3qVb0/architecture.jpg)
+
+If you check the graphic above you can see that I have methods to perform all the functions required by the "client" 
+
+-show_items: displays the items be it orders, products or couriers.
+-add_item_to_file: adds a new item and stores it persistently.
+-delete_items: deletes an item and stores that deletion persistently.
+-update_item: allows you to update an item and stores it persistently.
+
+Specifically for the order class it was required that you can update the status of an order, add or update the courier and add items for the order all of them by choosing an index from a list. These features are supported by the following methods
+-select_valid_status
+-choose_courier_for_order
+-choose_items_for_order
+
+There are obviously other methods in place which help the methods that perform the functions required by the "client".
+
+
 ## Desired improvements (TODO?)
-As of 2022-10-16 
+As of 2022-11-22 
 
-Separate reading and writing from and to file to its own function.
+I have restarted this program several times trying to implement a repository pattern, but ended up with circular imports and short on time to fix them.
 
-Change the architecture to a menu, list of items (parent class), list of couriers, list of orders, list of products (children classes) and item (parent class), order, courier and product (children class). 
+Separate reading and writing from and to file to its own function. This I actually implemented in the failed repository pattern implementation and would like to backport it to this version.
 
-Refactor to use integers for all menu options to avoid so many (possibly all) back and forth changes between data types.
+Break the massive single file program into several file for more comfortable editing. Again something that I attempted too late and resulted in circular imports.
 
-Refactor to use try, excepts to validate my data.
+Refactor to use integers for all menu options to avoid so many (possibly all) back and forth changes between data types. This was achieved in the failed attempt to do a repository pattern version of the project.
 
-The CSV module by default reads and writes all data (both keys and values of the dictionarys) as strings. I would have liked to find out how to explicitly store in my data type of choice.
+Refactor to use try, excepts to validate my data. I started doing this in the failed repository pattern version of the project. I thought it would simplify data validation hugely, but it also resulted in some limitations that I had not foreseen. For example, challenging behaviour if you tried to recursively call a method in the exception. 
+
+It would be nice to complete the requirements from weeks five and six and the optional requirements that I abandoned along the way.
 
 
 ## TECHNOLOGIES
 
 Python (required by "client")
+Database (mysql running on a docker) - Optional and not currently implemented.
 
 
 ## Most enjoyed
 
-Moving to an OOP implementation. Even though the architecture is poor and shows my lack of knowledge of architectural patterns, there was a certain satisfaction in doing OOP after 7 years without touching it.
+Moving to an OOP implementation. Even though the architecture is poor and shows my lack of knowledge of architectural patterns, there was a certain satisfaction in doing OOP after 7 years without touching it. Plus I felt a bit smug inheriting all those methods.
