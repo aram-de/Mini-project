@@ -139,6 +139,7 @@ It would be nice to complete the requirements from weeks five and six and the op
 ## TECHNOLOGIES
 
 Python (required by "client")
+
 Database (mysql running on a docker) - Optional and not currently implemented.
 
 
