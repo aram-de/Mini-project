@@ -144,6 +144,8 @@ Refactor to use integers for all menu options to avoid so many (possibly all) ba
 
 Refactor to use try, excepts to validate my data. I started doing this in the failed repository pattern version of the project. I thought it would simplify data validation hugely, but it also resulted in some limitations that I had not foreseen. For example, challenging behaviour if you tried to recursively call a method in the exception. 
 
+Use ENUMs for the statuses, since they are constants. Although I was pretty happy with using a tuple with strings nonetheless!
+
 It would be nice to complete the requirements from weeks five and six and the optional requirements that I abandoned along the way.
 
 Since I have talked quite a bit about the failed attempt to use the repository pattern, I have uploaded it in case anyone is curious. It can be found here 
