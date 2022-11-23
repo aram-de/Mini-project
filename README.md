@@ -146,6 +146,10 @@ Refactor to use try, excepts to validate my data. I started doing this in the fa
 
 It would be nice to complete the requirements from weeks five and six and the optional requirements that I abandoned along the way.
 
+Since I have talked quite a bit about the failed attempt to use the repository pattern, I have uploaded it in case anyone is curious. It can be found here 
+
+https://github.com/aram-de/failedRepositoryPattern
+
 
 ## TECHNOLOGIES
 
