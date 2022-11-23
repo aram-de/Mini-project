@@ -3,6 +3,7 @@ import csv
 from pathlib import Path
 import time
 import sys
+
 pos_status = ("Preparing", "Waiting", "Travelling", "Delivered")
 
 
@@ -408,9 +409,7 @@ def menu():
     except BaseException as e:
         print("Thank you for using our CLI")
         return e
-    except TypeError as e:
-        print("Invalid input for the main menu")
-        return e
+
 
 
 
