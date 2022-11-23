@@ -113,7 +113,7 @@ I read the requirements section that were weekly delivered to us and tried to ha
 
 This proved to be a poor strategy since there were some "requirements" that were implicit in the pseudocode and I had to reimplement some functions based on the pseudocode.
 
-![UML diagram showing the classes I used](https://i.ibb.co/GT3qVb0/architecture.jpg)
+![UML diagram showing the classes I used](https://i.ibb.co/YbPBTKv/architecture.jpg)
 
 If you check the graphic above you can see that I have methods to perform all the functions required by the "client" 
 
