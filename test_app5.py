@@ -2,7 +2,7 @@ import pytest
 import os
 from app5 import *
 from pathlib import Path
-
+from pytest import MonkeyPatch
 
 ##TEST GET FILE
 
@@ -122,17 +122,37 @@ def test_write_to_storage_fails():
 # #TESTING ADDING ITEM
 # #happy
 
-def test_add_item_succeeds(monkeypatch):
-    an_item_menu = Item()
-    #setup
-    #This fakes manual input
-    answers = iter(["testAdd", "3"])
-    monkeypatch.setattr('builtins.input', lambda _: next(answers, None))
-    
-    item_plus_added_content = list(an_item_menu.content).append({'name' : "testAdd", 'age' : "3"})
+# def test_add_item_succeeds(monkeypatch):
+#     an_item_menu = Item()
+#     #setup
+#     #This fakes manual input
+#     answers = ["testAdd", "3"]
+#     monkeypatch.setattr('builtins.input', lambda _: answers.pop(0))
+#     item_plus_added_content = list(an_item_menu.content)
+#     item_plus_added_content.append({'name' : "testAdd", 'age' : "3"})
+#     actual = an_item_menu.add_item_to_file()
+#     #action
+#     assert item_plus_added_content == an_item_menu.get_csv_and_return_as_list_of_dict()
 
-    #action
-    assert item_plus_added_content == an_item_menu.add_item_to_file()
+# def test_update_item_succeeds(monkeypatch):
+#     an_item_menu = Item()
+#     # def mock_update_item(self):
+#     #     return [{'name' : "testItem", 'age' : 42}, {'name' : "testProduct", 'age' : 44} ]
+#     #setup
+#     #This fakes manual input
+#     answers = ["1", "testProduct", "42", "0", "0"]
+#     monkeypatch.setattr('builtins.input', lambda _: answers.pop(0))
+#     # monkeypatch.setattr(Item, "update_item", mock_update_item)
+
+#     deep_copy = list(an_item_menu.content)
+#     deep_copy[0] = {'name' : "testItem", 'age' : 42} 
+#     an_item_menu.update_item()
+#     #actual 
+#     #action
+#     assert deep_copy == an_item_menu.get_csv_and_return_as_list_of_dict()
+
+
+
 
 
 
@@ -150,26 +170,45 @@ def test_main_menu_choose_zero(monkeypatch):
     expected = SystemExit
     assert type(actual) == expected
 
-def test_main_menu_choose_products_then_show_items_1_2(monkeypatch):
-    answers = "0"
-    monkeypatch.setattr('builtins.input', lambda : answers)
-    actual = menu()
-    expected = SystemExit
-    assert type(actual) == expected
 
-def test_main_menu_choose_products_then_add_item(monkeypatch):
+# def test_main_menu_choose_products_then_add_item(monkeypatch):
+#     """Chooses to open the product menu, then add an item
+#     called TestCoke with price 4"""
+#     #setup
+#     #This fakes manual input
+    
+#     menu()
+#     answers = iter(["1", "2", "TestCoke", "4"])
+#     monkeypatch.setattr('builtins.input', lambda _: next(answers, None))
+    
+#     product = Product()
+#     list_of_products = product.get_csv_and_return_as_list_of_dict()
+#     #action
+#     print(list_of_products)
+    
+#     assert list_of_products[len(list_of_products)-1] == {'name' : "TestCoke", 'price' : "4"}
+def test_add_item_succeeds(monkeypatch):
+    an_item_menu = Item()
+    #setup
+    #This fakes manual input
+    answers = ["testAdd", "3"]
+    monkeypatch.setattr('builtins.input', lambda _: answers.pop(0))
+    expected = list(an_item_menu.content)
+    expected.append({'name' : "testAdd", 'age' : "3"})
+    an_item_menu.add_item_to_file()
+    actual = an_item_menu.get_csv_and_return_as_list_of_dict()
+    assert expected == actual
+
+
+
+
+def test_main_menu_choose_1100_FAKE_TEST_SOMETHING_WRONG(monkeypatch):
     """Chooses to open the product menu, then add an item
     called TestCoke with price 4"""
     #setup
     #This fakes manual input
-    
-    menu()
-    answers = iter(["1", "2", "TestCoke", "4"])
-    monkeypatch.setattr('builtins.input', lambda _: next(answers, None))
-    
-    product = Product()
-    list_of_products = product.get_csv_and_return_as_list_of_dict()
-    #action
-    print(list_of_products)
-    
-    assert list_of_products[len(list_of_products)-1] == {'name' : "TestCoke", 'price' : "4"}
+    answers = ["1", "1", "0", "0"]
+    monkeypatch.setattr('builtins.input', lambda : answers.pop(0))
+    actual = menu()
+    expected = type(None)
+    assert type(actual) == expected

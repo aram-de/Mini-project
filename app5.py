@@ -9,11 +9,11 @@ pos_status = ("Preparing", "Waiting", "Travelling", "Delivered")
 
 class Item():
     def __init__(self) -> None:
-        self.content = "Item content"
         self.type = "item"
         self.name = ""
         self.age = ""
         self.field_names = ("name", "age")
+        self.content = self.get_csv_and_return_as_list_of_dict()
 
 
     def write_to_storage(self):
@@ -406,7 +406,7 @@ def menu():
             print("")
             order = Order()
             order.item_menu()
-    except BaseException as e:
+    except BaseException  as e:
         print("Thank you for using our CLI")
         return e
 
